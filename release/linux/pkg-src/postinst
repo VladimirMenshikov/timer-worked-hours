@@ -29,6 +29,10 @@ fi
 if [ "$NEED_NODE_INSTALL" -eq 1 ]; then
     echo "  Устанавливаю Node.js 22.x из NodeSource..."
     curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+    while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
+        echo "  Ожидание освобождения dpkg lock..."
+        sleep 2
+    done
     apt-get install -y nodejs
 fi
 
