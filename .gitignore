@@ -1,0 +1,25 @@
+# Секреты и локальные настройки
+.env
+.env.local
+.env.*.local
+
+# Python
+timer/.venv/
+timer/__pycache__/
+**/__pycache__/
+
+# Node.js / Next.js
+dashboard/node_modules/
+dashboard/.next/
+dashboard/out/
+*.tsbuildinfo
+
+# Документация разработки (не попадает в репозиторий по конвенции)
+TechSpecs/
+docs/
+
+# OS / редакторы
+.DS_Store
+.vscode/
+.idea/
+*.swp
