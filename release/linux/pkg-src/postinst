@@ -27,13 +27,15 @@ if command -v node >/dev/null 2>&1; then
     fi
 fi
 if [ "$NEED_NODE_INSTALL" -eq 1 ]; then
-    echo "  Устанавливаю Node.js 22.x из NodeSource..."
-    curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
-    while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
-        echo "  Ожидание освобождения dpkg lock..."
-        sleep 2
-    done
-    apt-get install -y nodejs
+    echo "  Устанавливаю Node.js 22.x (бинарный архив)..."
+    ARCH="$(dpkg --print-architecture)"
+    NODE_URL="https://nodejs.org/dist/v22.16.0/node-v22.16.0-linux-${ARCH}.tar.xz"
+    NODE_TMP="$(mktemp -d)"
+    trap 'rm -rf "$NODE_TMP"' EXIT
+    curl -fsSL "$NODE_URL" | tar -xJ -C "$NODE_TMP"
+    cp -a "$NODE_TMP"/node-v22.16.0-linux-${ARCH}/* /usr/local/
+    rm -rf "$NODE_TMP"
+    trap - EXIT
 fi
 
 echo "[2/6] PostgreSQL: роль и база данных..."
