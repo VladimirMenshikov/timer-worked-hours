@@ -1,0 +1,14 @@
+Package: ai-timer-worked
+Version: 1.0.0
+Section: utils
+Priority: optional
+Architecture: all
+Depends: python3 (>= 3.10), python3-venv, python3-pip, python3-gi, python3-gi-cairo, libnotify-bin, zenity, postgresql, postgresql-contrib, curl, ca-certificates, openssl
+Recommends: gir1.2-ayatanaappindicator3-0.1 | gir1.2-appindicator3-0.1
+Maintainer: VladimirMenshikov <vl.ai.zc.993587@gmail.com>
+Description: ai-timer-worked - system tray work timer + local dashboard
+ Tray application for Linux Mint / Cinnamon that logs work sessions
+ (start/pause/resume/stop) to a local PostgreSQL database, plus a
+ Next.js web dashboard (http://localhost:3000) with weekly/monthly
+ reports. The package installer sets up local PostgreSQL, Node.js,
+ database migrations and both applications end to end.

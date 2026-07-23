@@ -116,27 +116,7 @@ npm run build --prefix "$DASHBOARD_DIR"
 
 echo "[8/8] Автозапуск..."
 bash "$TIMER_DIR/autostart.sh"
-
-SYSTEMD_USER_DIR="$HOME/.config/systemd/user"
-mkdir -p "$SYSTEMD_USER_DIR"
-cat > "$SYSTEMD_USER_DIR/ai-work-hours-dashboard.service" <<EOF
-[Unit]
-Description=ai-timer-worked dashboard (Next.js)
-After=network.target postgresql.service
-
-[Service]
-Type=simple
-WorkingDirectory=${DASHBOARD_DIR}
-EnvironmentFile=${DASHBOARD_DIR}/.env
-ExecStart=$(command -v npm) start
-Restart=on-failure
-
-[Install]
-WantedBy=default.target
-EOF
-
-systemctl --user daemon-reload
-systemctl --user enable --now ai-work-hours-dashboard.service
+bash "$DASHBOARD_DIR/autostart.sh"
 
 echo ""
 echo "=== Готово! ==="

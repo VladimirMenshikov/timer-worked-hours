@@ -1,0 +1,23 @@
+#!/bin/sh
+set -e
+
+APP_DIR=/opt/ai-timer-worked
+TARGET_USER="${SUDO_USER:-$(logname 2>/dev/null || true)}"
+TARGET_HOME=""
+if [ -n "$TARGET_USER" ]; then
+    TARGET_HOME="$(getent passwd "$TARGET_USER" | cut -d: -f6)"
+fi
+
+if [ "$1" = "purge" ]; then
+    rm -rf "$APP_DIR/timer/.venv"
+    rm -rf "$APP_DIR/dashboard/node_modules"
+    rm -rf "$APP_DIR/dashboard/.next"
+    rm -f "$APP_DIR/timer/.env" "$APP_DIR/dashboard/.env"
+
+    if [ -n "$TARGET_HOME" ]; then
+        rm -f "$TARGET_HOME/.config/autostart/work-timer.desktop" 2>/dev/null || true
+        rm -f "$TARGET_HOME/.config/systemd/user/ai-work-hours-dashboard.service" 2>/dev/null || true
+    fi
+fi
+
+exit 0
