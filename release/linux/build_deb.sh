@@ -70,6 +70,6 @@ chmod 0755 "$PKG/opt/ai-timer-worked/timer/timer.py" \
     "$PKG/opt/ai-timer-worked/dashboard/autostart.sh"
 
 OUT="$SCRIPT_DIR/ai-timer-worked_${VERSION}_all.deb"
-dpkg-deb --root-owner-group --build "$PKG" "$OUT"
+dpkg-deb --root-owner-group -Zxz --build "$PKG" "$OUT"
 
 echo "Собрано: $OUT"
