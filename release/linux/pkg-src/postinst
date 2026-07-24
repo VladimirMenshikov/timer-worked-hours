@@ -27,14 +27,32 @@ if command -v node >/dev/null 2>&1; then
     fi
 fi
 if [ "$NEED_NODE_INSTALL" -eq 1 ]; then
-    echo "  Устанавливаю Node.js 22.x (бинарный архив)..."
-    ARCH="$(dpkg --print-architecture)"
-    NODE_VER="v22.23.0"
-    NODE_URL="https://nodejs.org/dist/${NODE_VER}/node-${NODE_VER}-linux-${ARCH}.tar.xz"
+    DPKG_ARCH="$(dpkg --print-architecture)"
+    case "$DPKG_ARCH" in
+        amd64)   NODE_ARCH="x64" ;;
+        arm64)   NODE_ARCH="arm64" ;;
+        armhf)   NODE_ARCH="armv7l" ;;
+        ppc64el) NODE_ARCH="ppc64le" ;;
+        s390x)   NODE_ARCH="s390x" ;;
+        *)
+            echo "  Неизвестная архитектура dpkg: $DPKG_ARCH — установите Node.js >= 22 вручную." >&2
+            exit 1
+            ;;
+    esac
+
+    NODE_VER="$(curl -fsSL https://nodejs.org/dist/index.json | grep -oE '"version":"v22\.[0-9]+\.[0-9]+"' | head -1 | sed -E 's/"version":"(v[0-9.]+)"/\1/')"
+    if [ -z "$NODE_VER" ]; then
+        echo "  Не удалось определить актуальную версию Node.js 22.x." >&2
+        exit 1
+    fi
+    echo "  Устанавливаю Node.js ${NODE_VER} (бинарный архив, linux-${NODE_ARCH})..."
+
+    NODE_URL="https://nodejs.org/dist/${NODE_VER}/node-${NODE_VER}-linux-${NODE_ARCH}.tar.xz"
     NODE_TMP="$(mktemp -d)"
     trap 'rm -rf "$NODE_TMP"' EXIT
-    curl -fsSL "$NODE_URL" | tar -xJ -C "$NODE_TMP"
-    cp -a "$NODE_TMP"/node-${NODE_VER}-linux-${ARCH}/* /usr/local/
+    curl -fsSL "$NODE_URL" -o "$NODE_TMP/node.tar.xz"
+    tar -xJf "$NODE_TMP/node.tar.xz" -C "$NODE_TMP"
+    cp -a "$NODE_TMP/node-${NODE_VER}-linux-${NODE_ARCH}"/* /usr/local/
     rm -rf "$NODE_TMP"
     trap - EXIT
 fi
