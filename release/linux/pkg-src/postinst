@@ -86,8 +86,8 @@ DASHBOARD_URL="http://localhost:${DASHBOARD_PORT}"
 
 echo "[3/6] Виртуальное окружение таймера и Python-зависимости..."
 python3 -m venv "$TIMER_DIR/.venv" --system-site-packages
-"$TIMER_DIR/.venv/bin/pip" install --quiet --upgrade pip
-"$TIMER_DIR/.venv/bin/pip" install --quiet -r "$TIMER_DIR/requirements.txt"
+"$TIMER_DIR/.venv/bin/pip" install --quiet --timeout 100 --retries 10 --upgrade pip
+"$TIMER_DIR/.venv/bin/pip" install --quiet --timeout 100 --retries 10 -r "$TIMER_DIR/requirements.txt"
 chmod +x "$TIMER_DIR/timer.py" "$TIMER_DIR/autostart.sh" "$DASHBOARD_DIR/autostart.sh"
 
 echo "[4/6] .env файлы..."
